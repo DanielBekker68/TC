@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Jump Start Booking</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Jump Start Booking</h1>
+        <nav>
+            <ul>
+                <li><a href="home.html">Home</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="booking-form">
+            <h2>Book Your Jump Start</h2>
+            <form id="booking-form">
+                <ul>
+                    <label for="jump-location">Location of Jump Start:</label>
+                </ul>
+                <ul>
+                    <input type="text" id="jump-location" name="jump-location" required>
+                </ul>
+
+                <ul>
+                    <label for="jump-time">Time of Jump:</label>
+                </ul>
+                <ul>
+                    <input type="datetime-local" id="jump-time" name="jump-time" required>
+                </ul>
+
+                <input type="submit" value="Submit">
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        
+    </footer>
+
+    <script>
+        document.getElementById('booking-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the form from submitting
+
+            // Get the form data
+            const formData = {
+                jumpLocation: document.getElementById('jump-location').value,
+                jumpTime: document.getElementById('jump-time').value
+            };
+
+            // Store the form data in local storage
+            const savedData = JSON.parse(localStorage.getItem('jumpStartFormData')) || [];
+            savedData.push(formData);
+            localStorage.setItem('jumpStartFormData', JSON.stringify(savedData));
+
+            // You can add additional logic here, such as sending the data to a server or API.
+            // For now, the data is saved in local storage.
+
+            // Provide a confirmation message
+            alert('Jump start request has been submitted. We will contact you shortly.');
+
+            // Reset the form
+            document.getElementById('booking-form').reset();
+        });
+    </script>
+</body>
+</html>

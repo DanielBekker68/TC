@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Transportation Booking</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Transportation Booking</h1>
+        <nav>
+            <ul>
+                <li><a href="home.html">Home</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="booking-form">
+            <h2>Book Your Transportation</h2>
+            <form id="booking-form">
+                <ul> <label for="Name">Name:</label> </ul>
+                <ul> <input type="text" id="Name" name="Name" required></ul>
+
+                <ul> <label for="Number">Number:</label> </ul>
+                <ul> <input type="number" id="Number" name="Number" required></ul>
+
+                <ul> <label for="pickup-location">Pick-up Location:</label> </ul>
+                <ul> <input type="text" id="pickup-location" name="pickup-location" required></ul>
+
+                <ul> <label for="dropoff-location">Drop-off Location:</label></ul>
+                <ul> <input type="text" id="dropoff-location" name="dropoff-location" required></ul>
+
+                <ul> <label for="pickup-date-time">Pick-up Date and Time:</label> </ul>
+                <ul> <input type="datetime-local" id="pickup-date-time" name="pickup-date-time" required></ul>
+
+                <ul> <label for="item">Item to Be Transported:</label> </ul>
+                <select id="item" name="item">
+                    <option value="car">Car</option>
+                    <option value="bakkie">Bakkie</option>
+                    <option value="forklift">Forklift</option>
+                    <option value="another">other</option>
+                </select>
+
+                <input type="submit" value="Submit">
+            </form>
+        </section>
+    </main>
+
+   
+        
+    
+
+    <script>
+        document.getElementById('booking-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the form from submitting
+
+            // Get the form data
+            const formData = {
+                Name: document.getElementById('Name').value,
+                Number: document.getElementById('Number').value,
+                pickupLocation: document.getElementById('pickup-location').value,
+                dropoffLocation: document.getElementById('dropoff-location').value,
+                pickupDateTime: document.getElementById('pickup-date-time').value,
+                item: document.getElementById('item').value
+            };
+
+            // Store the form data in local storage
+            const savedData = JSON.parse(localStorage.getItem('formData')) || [];
+            savedData.push(formData);
+            localStorage.setItem('formData', JSON.stringify(savedData));
+
+            // Send the data to GitHub using the GitHub REST API
+            const token = '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'; // Replace with your GitHub personal access token
+            const repoOwner = 'DanielBekker68'; // Replace with your GitHub username
+            const repoName = 'MCtowing'; // Replace with your GitHub repository name
+
+            const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/data.json`;
+            const data = JSON.stringify(savedData);
+
+            fetch(apiUrl, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `token ${token}`,
+                    'Accept': 'application/vnd.github.v3+json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    message: 'Add new data',
+                    content: btoa(data),
+                    sha: ''
+                })
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Data sent successfully
+                    alert('Form data has been saved to GitHub.');
+                } else {
+                    // Error occurred
+                    alert('An error occurred while saving the data to GitHub.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while saving the data to GitHub.');
+            });
+        });
+    </script>
+</body>
+</html>
